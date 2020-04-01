@@ -49,4 +49,11 @@ RUN mkdir /home/build
 RUN cd /home/build && THIRD_PARTY_DIR=/3rdparty cmake ..
 RUN cd /home/build && THIRD_PARTY_DIR=/3rdparty make -j4
 
+RUN mkdir /home/source
+RUN mkdir /home/masks
+RUN mkdir /home/interm
+
+COPY docker_source/source_volumes/LCTSC-Train-S1-001/* /home/source/
+COPY docker_source/source_masks/LCTSC-Train-S1-001/* /home/masks/
+
 COPY start.py /home/

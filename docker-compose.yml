@@ -6,7 +6,4 @@ services:
     hostname: drop2
     ports:
       - "5000:5000"
-    volumes:
-      - ./docker_input/:/home/input
-      - ./docker_output/:/home/output
     command: python3 /home/start.py #tail -F anything
