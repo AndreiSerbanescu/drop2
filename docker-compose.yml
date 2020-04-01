@@ -9,4 +9,4 @@ services:
     volumes:
       - ./docker_input/:/home/input
       - ./docker_output/:/home/output
-    command: tail -F anything #keep container running
+    command: python3 /home/start.py #tail -F anything

@@ -27,17 +27,26 @@ RUN cd 3rdparty/InsightToolkit-4.13.2/build && make install
 RUN apt-get install libboost-all-dev -y
 RUN apt-get install libtbb-dev -y
 
+# Make alias for dropreg
+RUN echo "alias dropreg=/home/build/drop/apps/dropreg/dropreg" >> ~/.bashrc
+
+# install python
+RUN apt-get update && apt-get install -y python python-dev python3.7 python3.7-dev python3-pip \
+    virtualenv libssl-dev libpq-dev git build-essential libfontconfig1 libfontconfig1-dev
+RUN pip3 install setuptools pip --upgrade --force-reinstall
+
 # Copying files
-COPY / /home/
+COPY drop /home/drop
+COPY itkio /home/itkio
+COPY mia /home/mia
+COPY mrfopt /home/mrfopt
+COPY .travis.yml /home/.travis.yml
+COPY build.sh /home/build.sh
+COPY CMakeLists.txt /home/CMakeLists.txt
 
 # Build code
 RUN mkdir /home/build
 RUN cd /home/build && THIRD_PARTY_DIR=/3rdparty cmake ..
 RUN cd /home/build && THIRD_PARTY_DIR=/3rdparty make -j4
 
-# Make alias for dropreg
-RUN echo "alias dropreg=/home/build/drop/apps/dropreg/dropreg" >> ~/.bashrc
-
-# Make input and output directories
-RUN mkdir /home/input
-RUN mkdir /home/output
+COPY start.py /home/
