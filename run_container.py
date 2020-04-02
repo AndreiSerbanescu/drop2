@@ -9,6 +9,8 @@ if __name__ == "__main__":
 
     parser.add_argument('-t', '--target', required=True, type=str, help="Host path to target volume directory")
     parser.add_argument('-o', '--output', required=True, type=str, help="Host path to output directory")
+    parser.add_argument('-s', '--source', default="", type=str, help="(Optional) Host path to source volume directory")
+    parser.add_argument('-m', '--mask', default="", type=str, help="(Optional) Host path to source mask directory")
 
     args = parser.parse_args()
 
@@ -22,6 +24,12 @@ if __name__ == "__main__":
         output = '{}:/home/output'.format(args.output)
 
         volumes = [target, output]
+
+        if args.source != "":
+            volumes.append('{}:/home/source'.format(args.source))
+
+        if args.mask != "":
+            volumes.append('{}:/home/mask'.format(args.mask))
 
         dc['services']['drop2']['volumes'] = volumes
 
