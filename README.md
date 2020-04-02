@@ -275,6 +275,53 @@ This is assuming we have very large images of say 16k by 16k pixels:
 
 The argument `ocompose` will result in the affine transformation being composed with the non-rigid deformation and the resulting displacement field will reflect the entire transformation (not just the non-rigid part).
 
+## Docker Container Usage
+
+Run `run_container.py` to perform registration with optional mask deformation.
+
+`--target` and `--output` paths are required. `--target` specifies where the `.dcm` files are to be found.
+
+If `--source` (for registration) and `--mask` (for mask deformation) are not specified, the container
+will use a default source volume and mask it contains.
+
+It is necessary that `--target`, `--source`, `--mask` point only to the directory, not to a specific `.dcm` or `nifty` file (i.e.
+`--target ./volume` not `--target ./volume/0001.dcm`)
+
+```
+
+  -t TARGET, --target TARGET
+                        Host path to target volume directory
+  -o OUTPUT, --output OUTPUT
+                        Host path to output directory
+  -s SOURCE, --source SOURCE
+                        (Optional) Host path to source volume directory
+  -m MASK, --mask MASK  (Optional) Host path to source mask directory
+  --with-mask-segmentation
+                        Select this to only perform registration
+  --debug               Select this for container to not perform any
+                        computation
+```
+### Example use-case
+
+Only registration with default source volume:
+```
+python3 run_container.py --target ./target_volume/ --output ./output/
+```
+
+Only registration with specified volume:
+```
+python3 run_container.py --target ./target_volume/ --output ./output/ --source ./source_volume/
+```
+
+Registration and mask deformation with default source and volume
+```
+python3 run_container.py --target ./target_volume/ --output ./output/ --with-mask-segmentation
+```
+
+Registration and mask deformation with custom source and volume
+```
+python3 run_container.py --target ./target_volume/ --output ./output/ --with-mask-segmentation --source ./source_volume/ --mask ./mask/
+```
 ## Acknowledgements
 
 The original idea for using discrete MRF optimization for image registration was developed back in 2006 by [Ben Glocker](http://www.doc.ic.ac.uk/~bglocker/) and [Nikos Paragios](https://en.wikipedia.org/wiki/Nikos_Paragios). The core algorithm has been patented (Pub. No. [WO/2009/010860](https://patentscope.wipo.int/search/en/detail.jsf?docId=WO2009010860)).
